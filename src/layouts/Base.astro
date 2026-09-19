@@ -1,0 +1,102 @@
+---
+import '../styles/global.css';
+import '@fontsource/old-standard-tt/400.css';
+import '@fontsource/old-standard-tt/700.css';
+import '@fontsource/rubik/400.css';
+import '@fontsource/rubik/500.css';
+import '@fontsource/rubik/700.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_NAME, SITE_TAGLINE, SITE_URL, PHONE_MAIN, EMAIL_MAIN, ADDRESS_STREET, ADDRESS_LOCALITY } from '../data/site';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = SITE_TAGLINE } = Astro.props;
+const pageTitle = title === 'Home' ? SITE_NAME : `${title} · ${SITE_NAME}`;
+const canonical = new URL(Astro.url.pathname, SITE_URL);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{pageTitle}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={SITE_NAME} />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={new URL('/og-image.jpg', SITE_URL)} />
+		<meta name="theme-color" content="#070812" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:image" content={new URL('/og-image.jpg', SITE_URL)} />
+		<script type="application/ld+json" set:html={JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'Organization',
+			name: SITE_NAME,
+			url: SITE_URL,
+			description: SITE_TAGLINE,
+			email: EMAIL_MAIN,
+			telephone: `+1-${PHONE_MAIN}`,
+			address: {
+				'@type': 'PostalAddress',
+				streetAddress: ADDRESS_STREET,
+				addressLocality: 'Houston',
+				addressRegion: 'TX',
+				addressCountry: 'US',
+			},
+		})} />
+		<ClientRouter />
+	</head>
+	<body class="flex min-h-screen flex-col">
+		<Header />
+		<main class="flex-1">
+			<slot />
+		</main>
+		<Footer />
+
+		<script>
+			// Animated stat counters
+			function bindCounters(root: ParentNode = document) {
+				const counters = root.querySelectorAll<HTMLElement>('[data-counter]:not([data-counter-done])');
+				if (!counters.length) return;
+				const animate = (el: HTMLElement) => {
+					el.dataset.counterDone = '1';
+					const target = Number(el.dataset.counter ?? 0);
+					const duration = 1600;
+					const start = performance.now();
+					const step = (now: number) => {
+						const t = Math.min((now - start) / duration, 1);
+						const eased = 1 - Math.pow(1 - t, 4);
+						el.textContent = String(Math.round(target * eased));
+						if (t < 1) requestAnimationFrame(step);
+					};
+					requestAnimationFrame(step);
+				};
+				const io = new IntersectionObserver(
+					(entries) => {
+						for (const entry of entries) {
+							if (entry.isIntersecting) {
+								animate(entry.target as HTMLElement);
+								io.unobserve(entry.target);
+							}
+						}
+					},
+					{ threshold: 0.5 }
+				);
+				counters.forEach((el) => io.observe(el));
+			}
+			bindCounters();
+			document.addEventListener('astro:page-load', () => bindCounters());
+		</script>
+	</body>
+</html>
