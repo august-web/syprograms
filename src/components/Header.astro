@@ -1,0 +1,212 @@
+---
+import { SITE_NAME, PHONE_MAIN, PHONE_MAIN_HREF } from '../data/site';
+import Logo from './Logo.astro';
+
+const links = [
+	{ href: '/', label: 'Home' },
+	{ href: '/about/', label: 'About' },
+	{ href: '/programs/', label: 'Programs' },
+	{ href: '/gallery/', label: 'Gallery' },
+	{ href: '/contact/', label: 'Contact' },
+];
+
+const current = Astro.url.pathname;
+const isActive = (href: string) =>
+	href === '/' ? current === '/' : current.startsWith(href);
+---
+
+<header
+	id="site-header"
+	class="fixed inset-x-0 top-0 z-50 transition-all duration-500"
+>
+	<!-- Dimming backdrop behind the open mobile menu -->
+	<div
+		id="mobile-menu-backdrop"
+		class="pointer-events-none fixed inset-0 z-0 bg-navy-950/55 opacity-0 backdrop-blur-sm transition-opacity duration-300 md:hidden"
+		aria-hidden="true"
+	></div>
+
+	<div class="container-site relative z-10 flex h-16 items-center justify-between gap-4">
+		<a
+			href="/"
+			class="group flex items-center gap-2.5 font-display text-lg font-bold text-white"
+		>
+			<Logo class="h-9 w-9 shadow-lg shadow-navy-900/30 transition-transform duration-500 group-hover:rotate-[8deg]" />
+			<span class="hidden drop-shadow-sm sm:inline">SYPrograms.org</span>
+			<span class="sr-only">{SITE_NAME}</span>
+		</a>
+
+		<nav
+			aria-label="Main navigation"
+			class="glass hidden rounded-full px-2 py-1.5 md:block"
+		>
+			<ul class="flex items-center gap-1">
+				{
+					links.map((link) => (
+						<li>
+							<a
+								href={link.href}
+								aria-current={isActive(link.href) ? 'page' : undefined}
+								class:list={[
+									'block rounded-full px-3.5 py-1.5 text-sm font-medium text-white/85 transition-colors duration-300 hover:bg-white/10 hover:text-white',
+									isActive(link.href) && 'bg-white/15 text-white',
+								]}
+							>
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+
+		<a
+			href={PHONE_MAIN_HREF}
+			class="hidden items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 px-5 py-2.5 text-sm font-bold text-navy-900 shadow-lg shadow-cyan-500/30 transition-transform hover:scale-[1.04] sm:inline-flex"
+		>
+			<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"
+				/>
+			</svg>
+			Call {PHONE_MAIN}
+		</a>
+
+		<button
+			id="mobile-menu-button"
+			type="button"
+			class="glass inline-flex h-10 w-10 items-center justify-center rounded-xl text-white md:hidden"
+			aria-expanded="false"
+			aria-controls="mobile-menu"
+		>
+			<span class="sr-only">Toggle menu</span>
+			<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+			</svg>
+		</button>
+	</div>
+
+	<div
+		id="mobile-menu"
+		class="relative z-10 mx-4 mt-2 hidden overflow-hidden rounded-2xl bg-white shadow-2xl shadow-navy-950/40 ring-1 ring-navy-100 md:hidden"
+	>
+		<ul class="flex flex-col p-3">
+			{
+				links.map((link) => (
+					<li>
+						<a
+							href={link.href}
+							aria-current={isActive(link.href) ? 'page' : undefined}
+							class:list={[
+								'block rounded-xl px-4 py-3 text-base font-medium text-navy-700 transition-colors hover:bg-navy-50',
+								isActive(link.href) && 'bg-navy-500 text-white hover:bg-navy-500',
+							]}
+						>
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+			<li class="mt-2 border-t border-navy-100 pt-3">
+				<a
+					href={PHONE_MAIN_HREF}
+					class="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-300 px-4 py-3 text-base font-bold text-navy-900"
+				>
+					Call {PHONE_MAIN}
+				</a>
+			</li>
+		</ul>
+	</div>
+</header>
+
+<script>
+	let menuGlobalsBound = false;
+
+	function initHeader() {
+		const header = document.getElementById('site-header');
+		if (!header) return;
+
+		// Glass background appears after scrolling past the hero edge
+		const onScroll = () => {
+			if (window.scrollY > 24) {
+				header.classList.add('is-scrolled');
+			} else {
+				header.classList.remove('is-scrolled');
+			}
+		};
+		window.addEventListener('scroll', onScroll, { passive: true });
+		onScroll();
+
+		const button = document.getElementById('mobile-menu-button');
+		const menu = document.getElementById('mobile-menu');
+		const backdrop = document.getElementById('mobile-menu-backdrop');
+
+		const setMenu = (open: boolean) => {
+			menu?.classList.toggle('hidden', !open);
+			menu?.classList.toggle('is-open', open);
+			backdrop?.classList.toggle('is-open', open);
+			button?.setAttribute('aria-expanded', String(open));
+			document.body.classList.toggle('overflow-hidden', open);
+		};
+		setMenu(false);
+
+		button?.addEventListener('click', () => {
+			setMenu(button.getAttribute('aria-expanded') !== 'true');
+		});
+		backdrop?.addEventListener('click', () => setMenu(false));
+		menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
+
+		// Escape-to-close + auto-close when resizing up to desktop — bound once
+		if (!menuGlobalsBound) {
+			menuGlobalsBound = true;
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape') setMenu(false);
+			});
+			window.matchMedia('(min-width: 768px)').addEventListener('change', () => setMenu(false));
+		}
+	}
+	initHeader();
+	document.addEventListener('astro:after-swap', initHeader);
+</script>
+
+<style>
+	#site-header {
+		text-shadow: 0 1px 12px rgba(6, 15, 36, 0.35);
+	}
+	#site-header.is-scrolled {
+		background: color-mix(in srgb, #070812 82%, transparent);
+		backdrop-filter: blur(18px) saturate(150%);
+		-webkit-backdrop-filter: blur(18px) saturate(150%);
+		box-shadow: 0 12px 40px -12px rgba(6, 15, 36, 0.5);
+	}
+	#site-header #mobile-menu {
+		text-shadow: none;
+	}
+
+	/* Mobile menu: opens with a slide-down; closed = display:none so the
+	   fixed header keeps its natural 64px height. */
+	#mobile-menu.is-open {
+		animation: menu-slide-down 0.35s var(--ease-out-expo);
+	}
+	@keyframes menu-slide-down {
+		from {
+			opacity: 0;
+			transform: translateY(-12px) scale(0.98);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+	#mobile-menu-backdrop.is-open {
+		opacity: 1;
+		pointer-events: auto;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		#mobile-menu.is-open {
+			animation: none;
+		}
+	}
+</style>
