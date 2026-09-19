@@ -1,0 +1,136 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { Image } from 'astro:assets';
+import { galleryPhotos } from '../data/gallery';
+
+const lightboxData = galleryPhotos.map((photo) => ({
+	full: photo.src.src,
+	caption: photo.caption,
+}));
+---
+
+<Base
+	title="Gallery"
+	description="Photos from Southside Youth Programs — music classes, the after-school program, culinary workshops, and life at our Houston community center."
+>
+	<PageHeader
+		eyebrow="Real moments"
+		title="Gallery"
+		subtitle="Photos from our programs and events."
+	/>
+
+	<section class="py-24">
+		<div class="container-site">
+			<div class="columns-1 gap-5 sm:columns-2 lg:columns-3 [&>figure]:mb-5">
+				{
+					galleryPhotos.map((photo, i) => (
+						<figure
+							class="group relative cursor-zoom-in overflow-hidden rounded-3xl bg-navy-950 shadow-md transition-shadow duration-300 hover:shadow-xl"
+							data-variant="scale"
+
+							data-lightbox-trigger={i}
+						>
+							<Image
+								src={photo.src}
+								alt={photo.alt}
+								class="w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+								widths={[400, 800]}
+								sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+							/>
+							<figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-950/85 via-navy-950/25 to-transparent p-5 pt-12">
+								<span class="font-display text-lg font-bold text-white">{photo.caption}</span>
+								<span class="mt-1 flex items-center gap-1.5 text-xs font-medium text-cyan-300 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+									View full size
+									<svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.2-5.2M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" /></svg>
+								</span>
+							</figcaption>
+						</figure>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- Lightbox -->
+	<div
+		id="lightbox"
+		class="fixed inset-0 z-[100] hidden items-center justify-center bg-navy-950/95 p-4 backdrop-blur-md sm:p-10"
+		role="dialog"
+		aria-modal="true"
+		aria-label="Photo viewer"
+	>
+		<button id="lightbox-close" class="glass absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full text-white" aria-label="Close viewer">
+			<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+		</button>
+		<button id="lightbox-prev" class="glass absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-white sm:left-6" aria-label="Previous photo">
+			<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
+		</button>
+		<button id="lightbox-next" class="glass absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-white sm:right-6" aria-label="Next photo">
+			<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+		</button>
+		<figure class="max-h-full max-w-4xl text-center">
+			<img id="lightbox-img" class="max-h-[78vh] w-auto rounded-2xl shadow-2xl" src="" alt="" />
+			<figcaption id="lightbox-caption" class="mt-4 font-display text-lg font-bold text-white"></figcaption>
+		</figure>
+	</div>
+
+	<script type="application/json" id="lightbox-data" set:html={JSON.stringify(lightboxData)} />
+</Base>
+
+<script>
+	const photos: { full: string; caption: string }[] = JSON.parse(
+		(document.getElementById('lightbox-data') as HTMLScriptElement | null)?.textContent ?? '[]'
+	);
+
+	const lightbox = document.getElementById('lightbox');
+	const img = document.getElementById('lightbox-img') as HTMLImageElement | null;
+	const caption = document.getElementById('lightbox-caption');
+	let current = 0;
+
+	function show(index: number) {
+		if (!lightbox || !img || !caption || !photos.length) return;
+		current = (index + photos.length) % photos.length;
+		img.src = photos[current].full;
+		img.alt = photos[current].caption;
+		caption.textContent = photos[current].caption;
+	}
+
+	function open(index: number) {
+		if (!lightbox) return;
+		show(index);
+		lightbox.classList.remove('hidden');
+		lightbox.classList.add('flex');
+		document.body.style.overflow = 'hidden';
+	}
+
+	function close() {
+		if (!lightbox) return;
+		lightbox.classList.add('hidden');
+		lightbox.classList.remove('flex');
+		document.body.style.overflow = '';
+	}
+
+	function initGallery() {
+		document.querySelectorAll<HTMLElement>('[data-lightbox-trigger]').forEach((trigger) => {
+			if (trigger.dataset.lightboxBound) return;
+			trigger.dataset.lightboxBound = '1';
+			trigger.addEventListener('click', () => open(Number(trigger.dataset.lightboxTrigger)));
+		});
+	}
+	initGallery();
+	document.addEventListener('astro:page-load', initGallery);
+
+	document.getElementById('lightbox-close')?.addEventListener('click', close);
+	document.getElementById('lightbox-prev')?.addEventListener('click', () => show(current - 1));
+	document.getElementById('lightbox-next')?.addEventListener('click', () => show(current + 1));
+	lightbox?.addEventListener('click', (e) => {
+		if (e.target === lightbox) close();
+	});
+	document.addEventListener('keydown', (e) => {
+		if (lightbox?.classList.contains('hidden')) return;
+		if (e.key === 'Escape') close();
+		if (e.key === 'ArrowLeft') show(current - 1);
+		if (e.key === 'ArrowRight') show(current + 1);
+	});
+</script>
