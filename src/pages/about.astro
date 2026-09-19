@@ -1,0 +1,111 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { SITE_NAME } from '../data/site';
+import heroGroup from '../assets/hero-group.jpg';
+
+const stats = [
+	{ value: 5, suffix: '', label: 'Free youth programs' },
+	{ value: 4, suffix: '', label: 'Days a week, after school' },
+	{ value: 10, suffix: '', label: 'Monthly IMCO lab sessions' },
+	{ value: 100, suffix: '+', label: 'Neighbors & partners' },
+];
+---
+
+<Base
+	title="About"
+	description="Southside Youth Programs is a community organization on Houston's south side offering after-school enrichment, medical career exploration, music, arts, and culinary programs for local youth."
+>
+	<PageHeader
+		eyebrow="Since day one, on Peerless St"
+		title="About us"
+		subtitle="Neighbors serving neighbors — youth development on Houston's south side."
+		image={heroGroup}
+		imageAlt="SYP kids and mentors in their gold shirts in the classroom"
+	/>
+
+	<!-- Story -->
+	<section class="py-24">
+		<div class="container-site">
+			<div class="max-w-3xl space-y-5">
+				<p class="font-display text-sm font-bold uppercase tracking-[0.2em] text-cyan-600">Who we are</p>
+				<h2 class="font-display text-4xl font-bold leading-tight text-navy-600">						Rooted in the neighborhood we serve.
+					</h2>
+				<p class="leading-relaxed text-slate-700">
+					{SITE_NAME} (SYP) is a community-based organization serving young people
+					on the south side of Houston, Texas. We provide a safe, encouraging
+					space where students can do their homework, explore new skills, and
+					build relationships with caring adults.
+				</p>
+				<p class="leading-relaxed text-slate-700">						Our programs range from daily after-school care to a medical careers
+						track developed with Baylor College of Medicine.
+					</p>
+				<p class="leading-relaxed text-slate-700">
+					Want to get involved? <a class="link-sweep font-bold text-cyan-600" href="/contact/">We'd love to talk.</a>
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Mission panel -->
+	<section class="px-4 sm:px-6 lg:px-8">
+		<div class="container-site">
+			<div class="relative isolate overflow-hidden rounded-[2.5rem] bg-navy-950 px-8 py-16 text-white sm:px-14 sm:py-20">
+			<p class="font-display text-sm font-bold uppercase tracking-[0.25em] text-cyan-300">Our mission</p>
+			<p class="mt-5 max-w-3xl font-display text-2xl font-bold leading-snug sm:text-3xl">
+				To enrich the lives of south side Houston youth through safe after-school
+				programming, hands-on learning, and partnerships that open doors.
+			</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Stats -->
+	<section class="py-20">
+		<div class="container-site grid grid-cols-2 gap-6 lg:grid-cols-4">
+			{
+				stats.map((stat, i) => (
+					<div class="rounded-3xl border border-navy-100 bg-white p-8 text-center shadow-sm transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-navy-900/10">
+						<p class="font-display text-5xl font-bold text-navy-500">
+							<span data-counter={stat.value}>0</span>{stat.suffix}
+						</p>
+						<p class="mt-2 text-sm font-medium leading-snug text-slate-500">{stat.label}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- Differentiators -->
+	<section class="bg-navy-50/60 py-20">
+		<div class="container-site">
+			<h2 class="max-w-xl font-display text-4xl font-bold text-navy-600">
+				What makes us different
+			</h2>
+			<div class="mt-12 grid gap-6 sm:grid-cols-3">
+				{
+					[
+						{
+							title: 'Community roots',
+							body: "We're a neighborhood organization, not a franchise. Families know us by name — starting with Lynn at the front desk.",
+						},
+						{
+							title: 'Real partnerships',
+							body: 'Baylor College of Medicine physicians and Nameless Sound teaching artists work directly with our students.',
+						},
+						{
+							title: 'Hands-on learning',
+							body: 'Keyboard labs, culinary workshops, interactive medical labs — students learn by doing, not just watching.',
+						},
+					].map((card, i) => (
+						<div class="group rounded-3xl border border-navy-100 bg-white p-8 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:border-cyan-200 hover:shadow-xl hover:shadow-navy-900/10">
+							<span class="font-display text-sm font-bold text-cyan-500">0{i + 1}</span>
+							<h3 class="mt-3 font-display text-2xl font-bold text-navy-600">{card.title}</h3>
+							<p class="mt-3 text-sm leading-relaxed text-slate-600">{card.body}</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+</Base>
