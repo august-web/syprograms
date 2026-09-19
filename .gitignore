@@ -1,0 +1,17 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# local tooling / workspace memory
+.freebuff/
+.workbuddy-ai/
+
+# original scraped image masters (54 MB — slimmed copies live in src/assets)
+scraped_assets/images/
+
+# OS / editor noise
+.DS_Store
+*.log
