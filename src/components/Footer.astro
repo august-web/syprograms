@@ -1,0 +1,89 @@
+---
+import {
+	SITE_NAME,
+	PHONE_MAIN,
+	PHONE_MAIN_HREF,
+	EMAIL_MAIN,
+	MAILTO_MAIN,
+	ADDRESS_STREET,
+	ADDRESS_LOCALITY,
+} from '../data/site';
+import Logo from './Logo.astro';
+
+const year = new Date().getFullYear();
+
+const exploreLinks = [
+	{ href: '/', label: 'Home' },
+	{ href: '/about/', label: 'About' },
+	{ href: '/programs/', label: 'Programs' },
+	{ href: '/gallery/', label: 'Gallery' },
+	{ href: '/contact/', label: 'Contact' },
+];
+---
+
+<footer class="relative isolate overflow-hidden bg-navy-950 text-white">
+
+	<div class="container-site grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4">
+		<div>
+			<a href="/" class="flex items-center gap-2.5 font-display text-xl font-bold">
+				<Logo class="h-10 w-10 shadow-lg ring-1 ring-white/20" aria-hidden="true" />
+				SYPrograms.org
+			</a>
+			<p class="mt-4 text-sm leading-relaxed text-navy-100/90">
+				After-school enrichment and youth development for the south side of
+				Houston, Texas.
+			</p>
+		</div>
+
+		<nav aria-label="Footer navigation">
+			<p class="font-display text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Explore</p>
+			<ul class="mt-4 space-y-2.5 text-sm">
+				{
+					exploreLinks.map((link) => (
+						<li>
+							<a class="link-sweep text-navy-100/90 hover:text-white" href={link.href}>
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+
+		<div>
+			<p class="font-display text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Contact</p>
+			<ul class="mt-4 space-y-2.5 text-sm text-navy-100/90">
+				<li>
+					<a class="link-sweep hover:text-white" href={PHONE_MAIN_HREF}>{PHONE_MAIN}</a>
+				</li>
+				<li>
+					<a class="link-sweep break-all hover:text-white" href={MAILTO_MAIN}>{EMAIL_MAIN}</a>
+				</li>
+				<li class="leading-relaxed">
+					{ADDRESS_STREET}<br />
+					{ADDRESS_LOCALITY}
+				</li>
+			</ul>
+		</div>
+
+		<div>
+			<p class="font-display text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Hours</p>
+			<ul class="mt-4 space-y-2.5 text-sm text-navy-100/90">
+				<li>After-school: Mon–Thu, 4–6 PM</li>
+				<li>IMCO: 1st Saturday of the month</li>
+			</ul>
+			<a
+				href={PHONE_MAIN_HREF}
+				class="mt-6 inline-flex rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 px-6 py-3 text-sm font-bold text-navy-900 shadow-lg shadow-cyan-500/25 transition-transform duration-300 hover:scale-[1.03]"
+			>
+				Call {PHONE_MAIN}
+			</a>
+		</div>
+	</div>
+
+	<div class="border-t border-white/10">
+		<div class="container-site flex flex-col items-center justify-between gap-2 py-6 text-xs text-navy-200/70 sm:flex-row">
+			<p>© {year} {SITE_NAME}. All rights reserved.</p>
+		</div>
+	</div>
+</footer>
