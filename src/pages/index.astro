@@ -1,0 +1,209 @@
+---
+import Base from '../layouts/Base.astro';
+import { programs } from '../data/programs';
+import { Image } from 'astro:assets';
+import { PHONE_MAIN, PHONE_MAIN_HREF, MAILTO_MAIN } from '../data/site';
+import heroGroup from '../assets/hero-group.jpg';
+
+const featured = programs.slice(0, 3);
+const marqueeItems = [
+	'After-School Program',
+	'Baylor IMCO',
+	'Music Classes',
+	'Arts & Creativity',
+	'Culinary Program',
+	'South Side · Houston',
+];
+---
+
+<Base
+	title="Home"
+	description="Southside Youth Programs offers after-school care, the Baylor IMCO medical careers program, music, arts, and culinary classes for youth on Houston's south side."
+>
+	<!-- Hero -->
+	<section class="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-navy-950 text-white">
+		<!-- Photo -->
+		<div class="absolute inset-0 -z-20 overflow-hidden">
+			<Image
+				src={heroGroup}
+				alt="SYP kids and mentors in their gold shirts, gathered in the classroom"
+				class="h-full w-full object-cover"
+				loading="eager"
+				widths={[800, 1200, 1600, 2000]}
+				sizes="100vw"
+			/>
+		</div>
+
+		<!-- Scrim -->
+		<div class="absolute inset-0 -z-10 bg-gradient-to-b from-navy-950/85 via-navy-950/55 to-navy-950" aria-hidden="true"></div>
+
+		<div class="container-site w-full py-32 sm:py-40">
+			<p class="flex items-center gap-3 font-display text-sm font-bold uppercase tracking-[0.25em] text-cyan-300">
+				<span class="inline-block h-px w-10 bg-gradient-to-r from-cyan-300 to-transparent"></span>
+				South side · Houston, TX
+			</p>
+
+			<h1 class="mt-6 max-w-4xl font-display text-5xl font-bold leading-[1.05] sm:text-7xl">
+				<span class="block">A safe place for</span>
+				<span class="block">south side youth to</span>
+				<span class="block">
+					<em class="not-italic text-cyan-300">learn, create,</em>
+				</span>
+				<span class="block"><em class="not-italic text-cyan-300">&amp; grow</em></span>
+			</h1>
+
+			<p class="mt-8 max-w-2xl text-lg leading-relaxed text-navy-100 sm:text-xl">
+				After-school care, medical career exploration with Baylor College of
+				Medicine, music, arts, and culinary classes — all under one roof.
+			</p>
+
+			<div class="mt-10 flex flex-wrap items-center gap-5">
+				<a
+					href="/programs/"
+					class="rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 px-8 py-4 text-base font-bold text-navy-900 shadow-xl shadow-cyan-500/30 transition-transform duration-300 hover:scale-[1.03]"
+				>
+					Explore our programs
+				</a>
+				<a
+					href={PHONE_MAIN_HREF}
+					class="glass rounded-full px-8 py-4 text-base font-bold text-white transition-colors hover:bg-white/15"
+				>
+					Call {PHONE_MAIN}
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- Floating glass schedule cards -->
+	<section class="relative z-10 -mt-20 pb-4">
+		<div class="container-site grid gap-4 sm:grid-cols-3">
+			{
+				[
+					{
+						label: 'After-school 2025–26',
+						value: 'Starts August 19, 2025',
+						detail: 'Enrollment open now',
+					},
+					{
+						label: 'Schedule',
+						value: 'Mon–Thu · 4–6 PM',
+						detail: 'Every school week',
+					},
+					{
+						label: 'Questions?',
+						value: 'Talk to Lynn',
+						detail: PHONE_MAIN,
+						href: PHONE_MAIN_HREF,
+					},
+				].map((card, i) => (
+					<div
+						class:list={[
+							'rounded-2xl bg-white p-6 shadow-xl shadow-navy-900/15 ring-1 ring-navy-100/70 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl',
+							i === 1 && 'sm:-mt-4',
+							i === 2 && 'sm:mt-2',
+						]}
+						data-variant="scale"
+
+					>
+						<p class="font-display text-xs font-bold uppercase tracking-[0.18em] text-cyan-600">{card.label}</p>
+						<p class="mt-2 font-display text-xl font-bold text-navy-700">{card.value}</p>
+						<p class="mt-1 text-sm text-slate-500">
+							{card.href ? <a class="font-bold text-cyan-600 hover:text-cyan-500" href={card.href}>{card.detail}</a> : card.detail}
+						</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- Marquee -->
+	<section class="overflow-hidden border-y border-navy-100 bg-navy-50/60 py-5" aria-hidden="true">
+		<div class="flex w-max animate-marquee whitespace-nowrap">
+			{
+				[0, 1].map(() => (
+					<div class="flex gap-10 pr-10">
+						{marqueeItems.map((item) => (
+							<span class="flex items-center gap-10 font-display text-lg font-bold text-navy-300">
+								{item}
+								<svg class="h-3.5 w-3.5 text-cyan-400" viewBox="0 0 24 24" fill="currentColor">
+									<path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z" />
+								</svg>
+							</span>
+						))}
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- Programs -->
+	<section class="py-24">
+		<div class="container-site">
+			<div class="flex flex-wrap items-end justify-between gap-4">
+				<div>
+					<p class="font-display text-sm font-bold uppercase tracking-[0.2em] text-cyan-600">What we do</p>
+					<h2 class="mt-3 max-w-xl font-display text-4xl font-bold text-navy-600 sm:text-5xl">
+						Programs for every interest.
+					</h2>
+				</div>
+				<a href="/programs/" class="link-sweep font-bold text-cyan-600 hover:text-cyan-500">
+					All programs →
+				</a>
+			</div>
+
+			<div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				{
+					featured.map((program, i) => (
+						<article
+							class:list={[
+								'group relative overflow-hidden rounded-3xl bg-navy-900 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-navy-900/25',
+								i === 0 && 'sm:col-span-2 lg:col-span-1',
+							]}
+
+						>
+							<div class="relative aspect-[4/3] overflow-hidden">
+								<Image
+									src={program.image}
+									alt={program.alt}
+									class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+									widths={[400, 800]}
+									sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+								/>
+								<div class="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/20 to-transparent"></div>
+								<div class="absolute inset-x-0 bottom-0 p-6">
+									<h3 class="font-display text-2xl font-bold text-white">{program.name}</h3>
+									<p class="mt-1.5 text-sm leading-relaxed text-navy-100 opacity-90">{program.summary}</p>
+									<p class="mt-4 inline-flex translate-y-2 items-center gap-1.5 text-sm font-bold text-cyan-300 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+										Learn more
+										<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" /></svg>
+									</p>
+								</div>
+							</div>
+						</article>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA band -->
+	<section class="relative isolate overflow-hidden bg-navy-950 py-24 text-white">
+		<div class="container-site flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center">
+			<div>
+				<h2 class="max-w-xl font-display text-3xl font-bold leading-tight sm:text-4xl">
+					Have questions? <span class="text-cyan-300">We'd love to hear from you.</span>
+				</h2>
+				<p class="mt-3 text-navy-100">
+					Email <a class="link-sweep font-bold text-cyan-300" href={MAILTO_MAIN}>{MAILTO_MAIN.replace('mailto:', '')}</a> or just call.
+				</p>
+			</div>
+			<a
+				href="/contact/"
+				class="shrink-0 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 px-8 py-4 font-bold text-navy-900 shadow-xl shadow-cyan-500/30 transition-transform duration-300 hover:scale-[1.03]"
+
+			>
+				Get in touch
+			</a>
+		</div>
+	</section>
+</Base>
