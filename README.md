@@ -1,7 +1,7 @@
 # Southside Youth Programs — syprograms.org
 
 The official website for **Southside Youth Programs (SYP)**, a community-based
-organization serving young people on the south side of Houston, Texas.
+organization serving young people on the Southside of Houston, Texas.
 
 After-school care (Mon–Thu, 4–6 PM), the **IMCO** medical careers program run
 with Baylor College of Medicine, music classes with Nameless Sound, arts and
