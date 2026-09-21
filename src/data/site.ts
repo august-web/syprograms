@@ -1,6 +1,6 @@
 export const SITE_NAME = 'Southside Youth Programs';
 export const SITE_TAGLINE =
-	'After-school enrichment and youth development for Houston’s south side';
+	'After-school enrichment and youth development for Houston’s Southside';
 export const SITE_URL = 'https://syprograms.org';
 
 export const PHONE_MAIN = '281-536-8292';
