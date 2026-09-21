@@ -15,7 +15,7 @@ export const programs: Program[] = [
 		details: [
 			'Monday through Thursday, 4:00–6:00 PM',
 			'2025–26 session starts August 19, 2025',
-			'Open to south side Houston youth',
+			'Open to Southside Houston youth',
 			'Snacks, tutoring, and structured activities included',
 		],
 		image: afterSchoolImg,
